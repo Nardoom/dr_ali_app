@@ -1,10 +1,11 @@
 from flask import Flask, request, jsonify, render_template
 import openai
+import os
 
 app = Flask(__name__)
 
-# Set your OpenAI API key
-openai.api_key = "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"  # Replace with your actual OpenAI API key
+# Set your OpenAI API key from an environment variable
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 @app.route('/')
 def main_page():
@@ -24,10 +25,10 @@ def get_advice():
         print(f"Received symptoms: {symptoms}")
 
         # Correct OpenAI API call for openai>=1.0.0
-        response = openai.chat.completions.create(
+        response = openai.Chat.Completions.create(
             model="gpt-3.5-turbo",  # Use "gpt-4" if you have access
             messages=[
-                {"role": "system", "content": "You are a highly knowledgeable and polite doctor named Dr. Ali. Always respond in the same {language} as the user. Diagnose symptoms, suggest treatments, recommend lifestyle changes, suitable foods, and over-the-counter medications.."},
+                {"role": "system", "content": "You are a highly knowledgeable and polite doctor named Dr. Ali that diagnoses symptoms, gives advice on treatment, lifestyle changes, what food and nutrients to avoid and what food and nutrients to consume, and OTC medications."},
                 {"role": "user", "content": symptoms}
             ]
         )
